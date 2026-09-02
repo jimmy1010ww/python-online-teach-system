@@ -116,19 +116,36 @@ export async function upsertProgress(rows) {
   if (error) console.warn("同步進度失敗:", error.message);
 }
 
-/** 讀取已發布的自訂題目 */
+// 資料庫還沒跑 migration-override.sql 時為 true(缺少 override_id 欄位)
+let migrationNeeded = false;
+
+export function needsMigration() {
+  return migrationNeeded;
+}
+
+/** 讀取自訂題目(含覆寫內建題的記錄) */
 export async function fetchCustomLevels() {
   if (!client) return [];
-  const { data, error } = await client
-    .from("custom_levels")
-    .select("id, chapter_num, position, data, published")
-    .order("chapter_num")
-    .order("position");
+
+  const query = (columns) =>
+    client.from("custom_levels").select(columns).order("chapter_num").order("position");
+
+  let { data, error } = await query(
+    "id, chapter_num, position, data, published, override_id"
+  );
+
+  // 42703 = 欄位不存在。尚未執行 supabase/migration-override.sql 時,
+  // 退回舊欄位查詢,讓網站照常運作(只是不支援覆寫內建題)。
+  if (error?.code === "42703") {
+    migrationNeeded = true;
+    ({ data, error } = await query("id, chapter_num, position, data, published"));
+  }
+
   if (error) {
     console.warn("讀取自訂題目失敗:", error.message);
     return [];
   }
-  return data;
+  return data ?? [];
 }
 
 /* ── 後台(老師)專用 ───────────────────────── */

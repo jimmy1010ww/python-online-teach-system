@@ -64,9 +64,19 @@
 
       <!-- 題目管理 -->
       <div id="panel-levels" class="is-hidden">
+        <p class="migration-warning is-hidden" id="migration-warning">
+          ⚠️ 內建題目目前只能瀏覽,不能編輯。請到 Supabase 的 <strong>SQL Editor</strong>
+          執行專案裡的 <code>supabase/migration-override.sql</code>,再重新整理這一頁。
+        </p>
         <div class="panel-toolbar">
           <span id="levels-summary"></span>
-          <button class="btn btn-run" id="btn-new-level">+ 新增題目</button>
+          <div class="toolbar-right">
+            <label class="filter-label" for="filter-chapter">章節</label>
+            <select id="filter-chapter">
+              <option value="all">全部章節</option>
+            </select>
+            <button class="btn btn-run" id="btn-new-level">+ 新增題目</button>
+          </div>
         </div>
         <div class="table-scroll">
           <table class="admin-table" id="levels-table">
@@ -86,9 +96,13 @@
         <!-- 題目編輯表單 -->
         <div id="level-editor" class="level-editor is-hidden">
           <h3 id="editor-title">新增題目</h3>
+          <p class="builtin-note is-hidden" id="builtin-note">
+            這是內建題目。儲存後會以你的版本取代原本的內容,關卡編號不變,
+            <strong>學生已完成的紀錄也不會消失</strong>;隨時可以在列表按「還原內建版」回到原版。
+          </p>
           <form id="level-form">
             <div class="editor-grid">
-              <div class="form-row">
+              <div class="form-row" id="row-chapter">
                 <label for="f-chapter">所屬章節</label>
                 <select id="f-chapter"></select>
               </div>
@@ -108,7 +122,7 @@
                 <label for="f-xp">XP 獎勵</label>
                 <input id="f-xp" type="number" min="10" max="500" value="50" required />
               </div>
-              <div class="form-row">
+              <div class="form-row" id="row-position">
                 <label for="f-position">章內排序(數字小在前)</label>
                 <input id="f-position" type="number" min="0" value="999" />
               </div>

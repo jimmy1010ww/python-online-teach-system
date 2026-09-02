@@ -140,3 +140,59 @@
   gap: 0.8rem;
   margin-top: 0.5rem;
 }
+
+/* 題目管理:狀態標籤與工具列 */
+.tag-builtin {
+  color: var(--color-text-faint);
+}
+
+.tag-modified {
+  color: var(--color-amber);
+}
+
+.toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.filter-label {
+  font-size: 0.85rem;
+  color: var(--color-text-faint);
+}
+
+.toolbar-right select {
+  padding: 0.45em 0.8em;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background: var(--color-space);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+}
+
+.builtin-note {
+  padding: 0.8rem 1rem;
+  margin-bottom: 1rem;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 196, 77, 0.08);
+  border: 1px dashed rgba(255, 196, 77, 0.35);
+  color: var(--color-amber);
+  font-size: 0.88rem;
+}
+
+.migration-warning {
+  padding: 0.9rem 1.1rem;
+  margin-bottom: 1rem;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 107, 129, 0.1);
+  border: 1px solid rgba(255, 107, 129, 0.4);
+  color: var(--color-red);
+  font-size: 0.9rem;
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}

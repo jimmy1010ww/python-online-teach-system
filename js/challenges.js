@@ -26,17 +26,29 @@ const RANK_TITLES = [
 
 /**
  * 建立完整課程。customRows 是 Supabase custom_levels 的資料列:
- * [{ id, chapter_num, position, data: {planet,title,topic,story,instructions,starter,hint,xp,stdin?,tests} }]
- * 自訂題目會依 chapter_num 附加到對應章節之後;找不到章節的放進「特別任務星系」。
+ * [{ id, chapter_num, position, data: {...}, override_id }]
+ *
+ * 兩種資料列:
+ * - override_id 有值 → 覆寫該 id 的內建關卡(關卡 id 保持不變,學生進度不受影響)
+ * - override_id 為空 → 老師新增的題目,依 chapter_num 附加到對應章節之後;
+ *   章節不存在時放進「特別任務星系」。
  */
 export function buildCourse(customRows = []) {
   const knownNums = new Set(RAW_CHAPTERS.map((c) => c.num));
+  const overrides = new Map();
   const byChapter = new Map();
   const orphans = [];
 
   for (const row of customRows) {
-    const level = { ...row.data, id: `custom-${row.id}` };
-    if (!level.title || !Array.isArray(level.tests)) continue; // 略過格式不完整的資料
+    const data = row.data ?? {};
+    if (!data.title || !Array.isArray(data.tests)) continue; // 略過格式不完整的資料
+
+    if (row.override_id) {
+      overrides.set(row.override_id, data);
+      continue;
+    }
+
+    const level = { ...data, id: `custom-${row.id}` };
     if (knownNums.has(row.chapter_num)) {
       if (!byChapter.has(row.chapter_num)) byChapter.set(row.chapter_num, []);
       byChapter.get(row.chapter_num).push({ level, position: row.position ?? 999 });
@@ -47,9 +59,16 @@ export function buildCourse(customRows = []) {
 
   const sortByPos = (list) => [...list].sort((a, b) => a.position - b.position).map((x) => x.level);
 
+  // 覆寫是整包取代(而非逐欄合併),老師在後台刪掉的欄位才會真的消失;
+  // 但 id 一律沿用內建關卡的,學生已通關的紀錄才不會對不上。
+  const applyOverride = (lv) => {
+    const data = overrides.get(lv.id);
+    return data ? { ...data, id: lv.id } : lv;
+  };
+
   const chapters = RAW_CHAPTERS.map((ch) => ({
     ...ch,
-    levels: [...ch.levels, ...sortByPos(byChapter.get(ch.num) ?? [])],
+    levels: [...ch.levels.map(applyOverride), ...sortByPos(byChapter.get(ch.num) ?? [])],
   }));
 
   if (orphans.length > 0) {
