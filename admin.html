@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PyQuest 教師後台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/game.css" />
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="logo" href="index.html" aria-label="回到遊戲">
+      <span class="logo-mark">🚀</span>
+      <span class="logo-text">Py<em>Quest</em> <span class="admin-badge">教師後台</span></span>
+    </a>
+    <div class="auth-area">
+      <span id="admin-user" class="user-chip"></span>
+      <a class="btn btn-ghost" href="index.html">← 回遊戲</a>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <!-- 權限確認中 / 拒絕 -->
+    <section id="admin-gate" class="admin-gate">
+      <p id="gate-message">確認身分中…</p>
+    </section>
+
+    <!-- 後台主體 -->
+    <section id="admin-body" class="is-hidden">
+      <nav class="admin-tabs">
+        <button class="admin-tab is-active" id="tab-students">👨‍🚀 學生進度</button>
+        <button class="admin-tab" id="tab-levels">🧪 題目管理</button>
+      </nav>
+
+      <!-- 學生進度 -->
+      <div id="panel-students">
+        <div class="panel-toolbar">
+          <span id="students-summary"></span>
+          <button class="btn btn-ghost" id="btn-refresh">↻ 重新整理</button>
+        </div>
+        <div class="table-scroll">
+          <table class="admin-table" id="students-table">
+            <thead>
+              <tr>
+                <th>暱稱</th>
+                <th>完成關卡</th>
+                <th>總星星</th>
+                <th>總 XP</th>
+                <th>最近通關</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 題目管理 -->
+      <div id="panel-levels" class="is-hidden">
+        <div class="panel-toolbar">
+          <span id="levels-summary"></span>
+          <button class="btn btn-run" id="btn-new-level">+ 新增題目</button>
+        </div>
+        <div class="table-scroll">
+          <table class="admin-table" id="levels-table">
+            <thead>
+              <tr>
+                <th>章節</th>
+                <th>標題</th>
+                <th>XP</th>
+                <th>狀態</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <!-- 題目編輯表單 -->
+        <div id="level-editor" class="level-editor is-hidden">
+          <h3 id="editor-title">新增題目</h3>
+          <form id="level-form">
+            <div class="editor-grid">
+              <div class="form-row">
+                <label for="f-chapter">所屬章節</label>
+                <select id="f-chapter"></select>
+              </div>
+              <div class="form-row">
+                <label for="f-planet">星球 Emoji</label>
+                <input id="f-planet" maxlength="8" placeholder="🪐" required />
+              </div>
+              <div class="form-row">
+                <label for="f-title">關卡標題</label>
+                <input id="f-title" maxlength="30" required />
+              </div>
+              <div class="form-row">
+                <label for="f-topic">教學主題</label>
+                <input id="f-topic" maxlength="30" required />
+              </div>
+              <div class="form-row">
+                <label for="f-xp">XP 獎勵</label>
+                <input id="f-xp" type="number" min="10" max="500" value="50" required />
+              </div>
+              <div class="form-row">
+                <label for="f-position">章內排序(數字小在前)</label>
+                <input id="f-position" type="number" min="0" value="999" />
+              </div>
+            </div>
+            <div class="form-row">
+              <label for="f-story">背景故事</label>
+              <textarea id="f-story" rows="2" required></textarea>
+            </div>
+            <div class="form-row">
+              <label for="f-instructions">任務目標(一行一條,可用 &lt;code&gt; 標籤)</label>
+              <textarea id="f-instructions" rows="3" required placeholder="建立變數 <code>x</code>&#10;印出結果"></textarea>
+            </div>
+            <div class="form-row">
+              <label for="f-starter">起始程式碼</label>
+              <textarea id="f-starter" rows="4" class="code-input" placeholder="# 在這裡開始&#10;"></textarea>
+            </div>
+            <div class="form-row">
+              <label for="f-hint">提示(學生按「需要提示」看到的內容)</label>
+              <textarea id="f-hint" rows="2" required></textarea>
+            </div>
+            <div class="form-row">
+              <label for="f-stdin">模擬輸入(選填,一行一個,給 input() 用)</label>
+              <textarea id="f-stdin" rows="2" class="code-input"></textarea>
+            </div>
+            <div class="form-row">
+              <label for="f-tests">測試(JSON 陣列;可用 output / ns / src)</label>
+              <textarea id="f-tests" rows="6" class="code-input" required
+                placeholder='[&#10;  {"name": "印出答案", "code": "assert \"42\" in output, \"要印出 42\""}&#10;]'></textarea>
+            </div>
+            <p class="auth-error" id="editor-error"></p>
+            <div class="editor-actions">
+              <button type="button" class="btn btn-ghost" id="btn-cancel-edit">取消</button>
+              <button type="submit" class="btn btn-run" id="btn-save-level">儲存題目</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="js/admin.js"></script>
+</body>
+</html>

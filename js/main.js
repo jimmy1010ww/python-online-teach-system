@@ -1,19 +1,22 @@
-// PyQuest 主程式:畫面切換、關卡渲染、執行流程
+// PyQuest 主程式:畫面切換、關卡渲染、執行流程、雲端同步
 
-import { CHAPTERS, CHALLENGES, MAX_XP } from "./challenges.js";
+import { buildCourse, DEFAULT_COURSE } from "./challenges.js";
 import { initRunner, runCode } from "./runner.js";
 import * as state from "./state.js";
+import * as cloud from "./cloud.js";
+import { initAuthUI, renderAuthState } from "./auth.js";
 
 const el = (id) => document.getElementById(id);
 
 let editor = null;
 let currentLevel = null;
+let course = DEFAULT_COURSE;
 
 /* ── 頁首統計 ── */
 function renderStats() {
   const { xp } = state.getState();
   el("xp-value").textContent = `${xp} XP`;
-  el("xp-fill").style.width = `${Math.min(100, (xp / MAX_XP) * 100)}%`;
+  el("xp-fill").style.width = `${Math.min(100, (xp / course.maxXp) * 100)}%`;
   el("star-value").textContent = `⭐ ${state.totalStars()}`;
   el("rank-value").textContent = state.rankFor(xp);
 }
@@ -24,7 +27,7 @@ function renderMap() {
   map.innerHTML = "";
   let flatIndex = 0;
 
-  CHAPTERS.forEach((chapter) => {
+  course.chapters.forEach((chapter) => {
     const doneCount = chapter.levels.filter((l) => state.isCompleted(l.id)).length;
 
     const section = document.createElement("section");
@@ -80,7 +83,7 @@ function renderMap() {
 
 /* ── 挑戰畫面 ── */
 function openLevel(index) {
-  currentLevel = { ...CHALLENGES[index], index };
+  currentLevel = { ...course.challenges[index], index };
   el("challenge-planet").textContent = currentLevel.planet;
   el("challenge-tag").textContent = `第 ${currentLevel.label} 關 · ${currentLevel.topic}`;
   el("challenge-title").textContent = currentLevel.title;
@@ -93,7 +96,7 @@ function openLevel(index) {
   el("output-console").classList.remove("has-error");
   el("test-results").innerHTML = "";
 
-  editor.setValue(currentLevel.starter);
+  editor.setValue(currentLevel.starter ?? "");
   showView("challenge");
   editor.refresh();
   editor.focus();
@@ -168,13 +171,18 @@ function celebrate() {
   const { stars, gainedXp, firstClear } = state.recordClear(currentLevel);
   renderStats();
 
+  // 登入中就順手同步到雲端(失敗不擋遊戲,下次登入會再合併)
+  cloud.upsertProgress([
+    { level_id: currentLevel.id, stars, xp: currentLevel.xp },
+  ]);
+
   el("victory-planet").textContent = currentLevel.planet;
   el("victory-xp").textContent = firstClear ? `+${gainedXp} XP` : "已通關 ✓";
   el("victory-msg").textContent = firstClear
     ? `獲得 ${"⭐".repeat(stars)} !${currentLevel.title} 的訊號站修復完成。`
     : "再次通關,實力更穩固了!";
 
-  const isLast = currentLevel.index === CHALLENGES.length - 1;
+  const isLast = currentLevel.index === course.challenges.length - 1;
   el("btn-next").textContent = isLast ? "🏆 回星圖領獎" : "下一顆星球 →";
   el("victory-modal").classList.remove("is-hidden");
 }
@@ -182,11 +190,24 @@ function celebrate() {
 function goNext() {
   el("victory-modal").classList.add("is-hidden");
   const nextIndex = currentLevel.index + 1;
-  if (nextIndex < CHALLENGES.length) {
+  if (nextIndex < course.challenges.length) {
     openLevel(nextIndex);
   } else {
     goHome();
   }
+}
+
+/* ── 雲端 ── */
+async function onAuthChanged(user) {
+  const profile = user ? await cloud.fetchProfile() : null;
+  renderAuthState(user, profile);
+  if (user) {
+    const cloudRows = await cloud.fetchProgress();
+    const toPush = state.mergeCloud(cloudRows);
+    if (toPush.length > 0) cloud.upsertProgress(toPush);
+  }
+  renderStats();
+  renderMap();
 }
 
 /* ── 初始化 ── */
@@ -198,7 +219,7 @@ function bindEvents() {
   el("btn-back").addEventListener("click", goHome);
   el("btn-run").addEventListener("click", handleRun);
   el("btn-reset").addEventListener("click", () => {
-    if (currentLevel) editor.setValue(currentLevel.starter);
+    if (currentLevel) editor.setValue(currentLevel.starter ?? "");
   });
   el("btn-hint").addEventListener("click", () => {
     if (!currentLevel) return;
@@ -227,6 +248,20 @@ async function boot() {
   });
 
   bindEvents();
+  initAuthUI();
+
+  // 雲端初始化(未設定時整段跳過,維持訪客模式)
+  try {
+    await cloud.initCloud(onAuthChanged);
+    const customRows = await cloud.fetchCustomLevels();
+    if (customRows.length > 0) {
+      course = buildCourse(customRows.filter((r) => r.published));
+      state.setCourse(course);
+    }
+  } catch (err) {
+    console.warn("雲端初始化失敗,以訪客模式繼續:", err);
+  }
+
   renderStats();
   renderMap();
 

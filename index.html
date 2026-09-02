@@ -40,6 +40,14 @@
         <span class="stat-value" id="rank-value">見習飛行員</span>
       </div>
     </div>
+    <div class="auth-area">
+      <button class="btn btn-ghost is-hidden" id="btn-auth">🔑 登入</button>
+      <div class="user-chip is-hidden" id="user-chip">
+        <span id="user-name">👨‍🚀</span>
+        <a class="btn btn-ghost admin-link is-hidden" id="admin-link" href="admin.html">📋 後台</a>
+        <button class="btn btn-ghost" id="btn-logout">登出</button>
+      </div>
+    </div>
   </header>
 
   <main id="app">
@@ -108,6 +116,35 @@
         <button class="btn btn-ghost" id="btn-stay">留在這關</button>
         <button class="btn btn-run" id="btn-next">下一顆星球 →</button>
       </div>
+    </div>
+  </div>
+
+  <!-- 登入/註冊彈窗 -->
+  <div class="modal-backdrop is-hidden" id="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-heading">
+    <div class="modal auth-modal">
+      <button class="modal-close" id="auth-close" aria-label="關閉">✕</button>
+      <h2 id="auth-heading">加入艦隊</h2>
+      <div class="auth-tabs" role="tablist">
+        <button class="auth-tab is-active" id="tab-signin" role="tab">登入</button>
+        <button class="auth-tab" id="tab-signup" role="tab">註冊</button>
+      </div>
+      <form id="auth-form">
+        <div class="form-row is-hidden" id="auth-name-row">
+          <label for="auth-name">暱稱</label>
+          <input type="text" id="auth-name" maxlength="20" placeholder="例如:小艾" autocomplete="nickname" />
+        </div>
+        <div class="form-row">
+          <label for="auth-email">信箱</label>
+          <input type="email" id="auth-email" required autocomplete="email" />
+        </div>
+        <div class="form-row">
+          <label for="auth-password">密碼</label>
+          <input type="password" id="auth-password" required minlength="6" autocomplete="current-password" />
+        </div>
+        <p class="auth-error" id="auth-error" role="alert"></p>
+        <button type="submit" class="btn btn-run auth-submit" id="auth-submit">登入</button>
+      </form>
+      <p class="auth-note">登入後進度會存到雲端,換電腦也能繼續冒險!</p>
     </div>
   </div>
 

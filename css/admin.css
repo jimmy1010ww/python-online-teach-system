@@ -1,0 +1,142 @@
+/* 教師後台樣式 */
+
+.admin-badge {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--color-amber);
+  border: 1px solid rgba(255, 196, 77, 0.4);
+  border-radius: 999px;
+  padding: 0.15em 0.7em;
+  vertical-align: middle;
+}
+
+.admin-main {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem clamp(1rem, 4vw, 3rem) 4rem;
+}
+
+.admin-gate {
+  text-align: center;
+  padding: 4rem 1rem;
+  color: var(--color-text-dim);
+  font-family: var(--font-display);
+}
+
+.admin-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.admin-tab {
+  padding: 0.6em 1.2em;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--color-text-dim);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.admin-tab.is-active {
+  color: var(--color-cyan);
+  border-bottom-color: var(--color-cyan);
+}
+
+.panel-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  color: var(--color-text-dim);
+  font-size: 0.9rem;
+}
+
+.table-scroll {
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--color-surface);
+  font-size: 0.92rem;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 0.7em 1em;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.admin-table th {
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  color: var(--color-text-faint);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.admin-table tbody tr:hover {
+  background: rgba(120, 150, 255, 0.05);
+}
+
+.admin-table .num {
+  font-family: var(--font-mono);
+}
+
+.tag-published {
+  color: var(--color-green);
+}
+
+.tag-draft {
+  color: var(--color-text-faint);
+}
+
+.row-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.row-actions .btn {
+  padding: 0.25em 0.7em;
+  font-size: 0.8rem;
+}
+
+/* 題目編輯器 */
+.level-editor {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-bright);
+  background: linear-gradient(170deg, var(--color-surface-raised), var(--color-surface));
+}
+
+.editor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0 1rem;
+}
+
+.code-input {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+}
+
+.editor-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  margin-top: 0.5rem;
+}
