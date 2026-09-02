@@ -1,0 +1,572 @@
+/* 遊戲介面元件 */
+
+/* ── 頁首 ───────────────────────────── */
+.site-header {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  padding: 1rem clamp(1rem, 4vw, 3rem);
+  border-bottom: 1px solid var(--color-border);
+  background: rgba(12, 18, 40, 0.75);
+  backdrop-filter: blur(12px);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.logo-mark {
+  font-size: 1.6rem;
+}
+
+.logo-text em {
+  font-style: normal;
+  color: var(--color-cyan);
+}
+
+.player-stats {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  flex-wrap: wrap;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  color: var(--color-text-faint);
+  text-transform: uppercase;
+}
+
+.stat-value {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-amber);
+}
+
+.rank-stat .stat-value {
+  color: var(--color-violet);
+}
+
+.xp-bar {
+  width: clamp(90px, 15vw, 160px);
+  height: 10px;
+  border-radius: 999px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+}
+
+.xp-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--color-cyan), var(--color-violet));
+  transition: width 600ms var(--ease-out-expo);
+}
+
+/* ── 星圖 ───────────────────────────── */
+.view {
+  position: relative;
+  z-index: 1;
+  padding: var(--space-section) clamp(1rem, 4vw, 3rem);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.map-intro {
+  text-align: center;
+  margin-bottom: var(--space-section);
+}
+
+.map-intro h1 {
+  background: linear-gradient(90deg, var(--color-cyan), var(--color-violet), var(--color-amber));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.map-subtitle {
+  color: var(--color-text-dim);
+}
+
+.level-map {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2.5rem, 2rem + 2vw, 4rem);
+}
+
+/* 章節區塊 */
+.chapter-head {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.chapter-emoji {
+  font-size: 2.4rem;
+  line-height: 1;
+}
+
+.chapter-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.chapter-kicker {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-cyan);
+  margin: 0;
+}
+
+.chapter-title {
+  font-size: 1.35rem;
+  margin: 0.1rem 0;
+}
+
+.chapter-sub {
+  font-size: 0.85rem;
+  color: var(--color-text-faint);
+  margin: 0;
+}
+
+.chapter-progress {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--color-text-dim);
+  padding: 0.35em 0.9em;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  white-space: nowrap;
+}
+
+.chapter-progress.is-complete {
+  color: var(--color-green);
+  border-color: rgba(74, 222, 128, 0.4);
+}
+
+.chapter-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 1.4rem;
+}
+
+.level-card {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 1.4rem 1.3rem 1.2rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background: linear-gradient(160deg, var(--color-surface-raised), var(--color-surface));
+  cursor: pointer;
+  text-align: left;
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  transition:
+    transform var(--duration-normal) var(--ease-out-expo),
+    box-shadow var(--duration-normal) var(--ease-out-expo),
+    border-color var(--duration-normal);
+}
+
+.level-card:hover:not(:disabled) {
+  transform: translateY(-6px);
+  border-color: var(--color-border-bright);
+  box-shadow: 0 14px 40px rgba(20, 40, 120, 0.45);
+}
+
+.level-card:focus-visible {
+  outline: 2px solid var(--color-cyan);
+  outline-offset: 3px;
+}
+
+.level-card:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+  filter: grayscale(0.8);
+}
+
+.level-planet {
+  font-size: 2.6rem;
+  line-height: 1;
+}
+
+.level-num {
+  position: absolute;
+  top: 1rem;
+  right: 1.1rem;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  color: var(--color-text-faint);
+  letter-spacing: 0.1em;
+}
+
+.level-name {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0.3rem 0 0;
+}
+
+.level-topic {
+  font-size: 0.85rem;
+  color: var(--color-text-dim);
+  margin: 0;
+}
+
+.level-stars {
+  margin-top: 0.5rem;
+  letter-spacing: 0.15em;
+  font-size: 0.9rem;
+}
+
+.level-card.is-done {
+  border-color: rgba(74, 222, 128, 0.4);
+}
+
+.level-card.is-done::after {
+  content: "✔ 已通關";
+  position: absolute;
+  bottom: 1rem;
+  right: 1.1rem;
+  font-size: 0.72rem;
+  color: var(--color-green);
+  font-family: var(--font-display);
+}
+
+.level-lock {
+  position: absolute;
+  bottom: 1rem;
+  right: 1.1rem;
+  font-size: 1rem;
+}
+
+/* ── 挑戰畫面 ───────────────────────── */
+#view-challenge {
+  max-width: 1400px;
+}
+
+.challenge-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 380px) 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.challenge-brief {
+  position: sticky;
+  top: 1.5rem;
+  padding: 1.6rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background: linear-gradient(170deg, var(--color-surface-raised), var(--color-surface));
+}
+
+.back-btn {
+  margin-bottom: 1rem;
+}
+
+.brief-planet {
+  font-size: 3.4rem;
+  line-height: 1;
+  margin-bottom: 0.6rem;
+}
+
+.brief-tag {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  color: var(--color-cyan);
+  text-transform: uppercase;
+  margin-bottom: 0.2rem;
+}
+
+.brief-story {
+  color: var(--color-text-dim);
+  font-size: 0.95rem;
+}
+
+.brief-mission h3 {
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  color: var(--color-amber);
+  margin-bottom: 0.4rem;
+}
+
+.brief-mission ul {
+  margin: 0 0 1rem;
+  padding-left: 1.2rem;
+  font-size: 0.95rem;
+}
+
+.brief-mission li {
+  margin-bottom: 0.35rem;
+}
+
+.hint-text {
+  margin-top: 0.8rem;
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 196, 77, 0.08);
+  border: 1px dashed rgba(255, 196, 77, 0.35);
+  color: var(--color-amber);
+  font-size: 0.9rem;
+}
+
+.challenge-work {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  min-width: 0;
+}
+
+.editor-panel,
+.output-panel {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  overflow: hidden;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.panel-title {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  color: var(--color-text-dim);
+}
+
+.panel-actions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.CodeMirror {
+  height: clamp(240px, 38vh, 420px);
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  background: var(--color-space);
+  color: var(--color-text);
+}
+
+.CodeMirror-gutters {
+  background: var(--color-space);
+  border-right: 1px solid var(--color-border);
+}
+
+.CodeMirror-linenumber {
+  color: var(--color-text-faint);
+}
+
+.CodeMirror-cursor {
+  border-left: 2px solid var(--color-cyan);
+}
+
+.cm-s-default .cm-keyword { color: var(--color-violet); }
+.cm-s-default .cm-string { color: var(--color-amber); }
+.cm-s-default .cm-number { color: var(--color-cyan); }
+.cm-s-default .cm-comment { color: var(--color-text-faint); }
+.cm-s-default .cm-builtin,
+.cm-s-default .cm-def { color: var(--color-green); }
+
+.output-console {
+  margin: 0;
+  padding: 1rem 1.2rem;
+  min-height: 80px;
+  max-height: 220px;
+  overflow: auto;
+  font-family: var(--font-mono);
+  font-size: 0.92rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--color-text-dim);
+}
+
+.output-console.has-error {
+  color: var(--color-red);
+}
+
+.test-results {
+  padding: 0 1.2rem;
+}
+
+.test-results:not(:empty) {
+  padding: 0.6rem 1.2rem 1rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.test-item {
+  display: flex;
+  gap: 0.6rem;
+  align-items: baseline;
+  padding: 0.3rem 0;
+  font-size: 0.95rem;
+}
+
+.test-item.pass {
+  color: var(--color-green);
+}
+
+.test-item.fail {
+  color: var(--color-red);
+}
+
+/* ── 通關彈窗 ───────────────────────── */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(4, 6, 16, 0.75);
+  backdrop-filter: blur(6px);
+}
+
+.modal {
+  position: relative;
+  max-width: 420px;
+  width: calc(100% - 2rem);
+  padding: 2.5rem 2rem 2rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-bright);
+  background: linear-gradient(170deg, var(--color-surface-raised), var(--color-space));
+  text-align: center;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), var(--glow-cyan);
+  animation: modal-pop 400ms var(--ease-out-expo);
+}
+
+@keyframes modal-pop {
+  from {
+    transform: scale(0.85) translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+.victory-planet {
+  font-size: 4rem;
+  line-height: 1;
+  animation: float 3s ease-in-out infinite alternate;
+}
+
+@keyframes float {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-10px);
+  }
+}
+
+.victory-xp {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--color-amber);
+  text-shadow: var(--glow-amber);
+  margin-bottom: 0.4rem;
+}
+
+.victory-msg {
+  color: var(--color-text-dim);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-top: 1.4rem;
+}
+
+/* ── 載入畫面 ───────────────────────── */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  background: var(--color-space-deep);
+  font-family: var(--font-display);
+  transition: opacity 400ms ease, visibility 400ms;
+}
+
+.loading-overlay.is-gone {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.loading-ship {
+  font-size: 3rem;
+  animation: launch 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes launch {
+  from {
+    transform: translateY(6px) rotate(-45deg);
+  }
+  to {
+    transform: translateY(-6px) rotate(-45deg);
+  }
+}
+
+.loading-sub {
+  font-size: 0.85rem;
+  color: var(--color-text-faint);
+}
+
+/* ── 響應式 ─────────────────────────── */
+@media (max-width: 900px) {
+  .challenge-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .challenge-brief {
+    position: static;
+  }
+}

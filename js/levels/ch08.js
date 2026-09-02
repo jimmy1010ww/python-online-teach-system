@@ -1,0 +1,71 @@
+// 第 8 章:演算法(排序與搜尋)
+export const CH8 = {
+  num: 8,
+  emoji: "🧠",
+  title: "演算法星系",
+  subtitle: "泡沫排序、循序搜尋、二分搜尋",
+  levels: [
+    {
+      id: "c8-bubble",
+      planet: "🫧",
+      title: "泡沫排序引擎",
+      topic: "泡沫排序",
+      story: "泡沫排序:兩兩比較、大的往後浮,一輪一輪直到全部排好。不准偷用 sort()!",
+      instructions: [
+        "寫函式 <code>bubble_sort(lst)</code>,回傳由小到大排序的串列",
+        "用兩層迴圈:相鄰兩數比較,前面比較大就交換",
+        "禁止使用 <code>sort()</code> 或 <code>sorted()</code>",
+      ],
+      starter: "def bubble_sort(lst):\n    # 兩層迴圈,相鄰比較交換\n    for i in range(len(lst) - 1):\n        for j in range(len(lst) - 1 - i):\n            # 如果 lst[j] > lst[j+1] 就交換\n            pass\n    return lst\n\nprint(bubble_sort([5, 2, 9, 1]))\n",
+      hint: "交換寫法:lst[j], lst[j+1] = lst[j+1], lst[j](Python 可以一行交換!)。",
+      xp: 70,
+      tests: [
+        { name: "沒有偷用內建排序", code: 'assert ".sort(" not in src and "sorted(" not in src, "要自己實作,不能用 sort() 或 sorted()"' },
+        { name: "排序正確", code: 'assert ns["bubble_sort"]([5, 2, 9, 1]) == [1, 2, 5, 9], "bubble_sort([5,2,9,1]) 應該是 [1,2,5,9]"' },
+        { name: "各種資料都能排", code: 'assert ns["bubble_sort"]([3]) == [3] and ns["bubble_sort"]([4, 4, 1]) == [1, 4, 4], "單一元素和重複值也要能排"' },
+      ],
+    },
+    {
+      id: "c8-linear",
+      planet: "🚶",
+      title: "循序搜尋巡邏",
+      topic: "循序搜尋",
+      story: "從頭走到尾,一格一格找目標。找到回報位置,找不到回報 -1。不能用 index()!",
+      instructions: [
+        "寫函式 <code>linear_search(lst, target)</code>",
+        "用 for 迴圈逐一比對,找到就回傳索引",
+        "整個找完都沒有,回傳 <code>-1</code>",
+      ],
+      starter: "def linear_search(lst, target):\n    # 逐一檢查每個位置\n    pass\n\nprint(linear_search([7, 3, 9, 5], 9))\nprint(linear_search([7, 3, 9, 5], 100))\n",
+      hint: "for i in range(len(lst)): 如果 lst[i] == target 就 return i;迴圈結束後 return -1。",
+      xp: 70,
+      tests: [
+        { name: "沒有偷用 index()", code: 'assert ".index(" not in src, "要自己用迴圈找,不能用 index()"' },
+        { name: "找得到目標", code: 'assert ns["linear_search"]([7, 3, 9, 5], 9) == 2, "9 在索引 2"' },
+        { name: "找不到回 -1", code: 'assert ns["linear_search"]([7, 3, 9, 5], 100) == -1, "找不到要回傳 -1"' },
+        { name: "第一個位置也找得到", code: 'assert ns["linear_search"]([7, 3, 9, 5], 7) == 0, "7 在索引 0"' },
+      ],
+    },
+    {
+      id: "c8-binary",
+      planet: "✂️",
+      title: "二分搜尋神器",
+      topic: "二分搜尋",
+      story: "資料排好序時,每次從中間切一半,猜大了往左、猜小了往右——百萬筆資料 20 步就找到!",
+      instructions: [
+        "寫函式 <code>binary_search(lst, target)</code>(lst 已由小到大排序)",
+        "用 <code>low</code>、<code>high</code> 兩個指標和 while 迴圈",
+        "找到回傳索引,找不到回傳 <code>-1</code>",
+      ],
+      starter: "def binary_search(lst, target):\n    low = 0\n    high = len(lst) - 1\n    while low <= high:\n        mid = (low + high) // 2\n        # 比較 lst[mid] 和 target,調整 low 或 high\n        pass\n    return -1\n\nprint(binary_search([1, 3, 5, 7, 9, 11], 7))\n",
+      hint: "lst[mid] == target → return mid;lst[mid] < target → low = mid + 1;否則 high = mid - 1。",
+      xp: 70,
+      tests: [
+        { name: "沒有偷用 index()", code: 'assert ".index(" not in src, "要自己實作二分搜尋"' },
+        { name: "找到中段目標", code: 'assert ns["binary_search"]([1, 3, 5, 7, 9, 11], 7) == 3, "7 在索引 3"' },
+        { name: "頭尾都找得到", code: 'assert ns["binary_search"]([1, 3, 5, 7, 9, 11], 1) == 0 and ns["binary_search"]([1, 3, 5, 7, 9, 11], 11) == 5, "最小值和最大值也要找得到"' },
+        { name: "找不到回 -1", code: 'assert ns["binary_search"]([1, 3, 5, 7, 9, 11], 4) == -1, "4 不在串列裡,要回傳 -1"' },
+      ],
+    },
+  ],
+};

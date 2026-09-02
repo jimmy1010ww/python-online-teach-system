@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PyQuest — Python 星際探險</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=Noto+Sans+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css" />
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/game.css" />
+</head>
+<body>
+  <div class="stars" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <a class="logo" href="#" id="logo-home" aria-label="回到星圖">
+      <span class="logo-mark">🚀</span>
+      <span class="logo-text">Py<em>Quest</em></span>
+    </a>
+    <div class="player-stats">
+      <div class="stat xp-stat">
+        <span class="stat-label">經驗值</span>
+        <div class="xp-bar" role="progressbar" aria-label="經驗值進度">
+          <div class="xp-fill" id="xp-fill"></div>
+        </div>
+        <span class="stat-value" id="xp-value">0 XP</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">星星</span>
+        <span class="stat-value" id="star-value">⭐ 0</span>
+      </div>
+      <div class="stat rank-stat">
+        <span class="stat-label">階級</span>
+        <span class="stat-value" id="rank-value">見習飛行員</span>
+      </div>
+    </div>
+  </header>
+
+  <main id="app">
+    <!-- 星圖(關卡地圖) -->
+    <section id="view-map" class="view" aria-labelledby="map-heading">
+      <div class="map-intro">
+        <h1 id="map-heading">Python 星際探險</h1>
+        <p class="map-subtitle">
+          駕駛你的太空船,穿越 8 大星系、征服 50+ 顆星球。<br />
+          從變數一路學到演算法與例外處理,通關獲得經驗值、解鎖下一顆星球!
+        </p>
+      </div>
+      <div class="level-map" id="level-map"></div>
+    </section>
+
+    <!-- 挑戰畫面 -->
+    <section id="view-challenge" class="view is-hidden" aria-labelledby="challenge-title">
+      <div class="challenge-layout">
+        <aside class="challenge-brief">
+          <button class="btn btn-ghost back-btn" id="btn-back">← 回星圖</button>
+          <div class="brief-planet" id="challenge-planet" aria-hidden="true">🪐</div>
+          <p class="brief-tag" id="challenge-tag">第 1 關</p>
+          <h2 id="challenge-title">關卡標題</h2>
+          <p class="brief-story" id="challenge-story"></p>
+          <div class="brief-mission">
+            <h3>任務目標</h3>
+            <div id="challenge-instructions"></div>
+          </div>
+          <button class="btn btn-hint" id="btn-hint">💡 需要提示</button>
+          <p class="hint-text is-hidden" id="hint-text"></p>
+        </aside>
+
+        <div class="challenge-work">
+          <div class="editor-panel">
+            <div class="panel-header">
+              <span class="panel-title">🛠 程式碼艙</span>
+              <div class="panel-actions">
+                <button class="btn btn-ghost" id="btn-reset">重設程式碼</button>
+                <button class="btn btn-run" id="btn-run">▶ 執行任務</button>
+              </div>
+            </div>
+            <textarea id="code-editor"></textarea>
+          </div>
+
+          <div class="output-panel">
+            <div class="panel-header">
+              <span class="panel-title">📡 訊號回傳(輸出)</span>
+            </div>
+            <pre id="output-console" class="output-console">等待執行…</pre>
+            <div id="test-results" class="test-results"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 通關彈窗 -->
+  <div class="modal-backdrop is-hidden" id="victory-modal" role="dialog" aria-modal="true" aria-labelledby="victory-title">
+    <div class="modal victory-modal">
+      <div class="victory-burst" aria-hidden="true"></div>
+      <div class="victory-planet" id="victory-planet">🪐</div>
+      <h2 id="victory-title">任務完成!</h2>
+      <p class="victory-xp" id="victory-xp">+50 XP</p>
+      <p class="victory-msg" id="victory-msg"></p>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="btn-stay">留在這關</button>
+        <button class="btn btn-run" id="btn-next">下一顆星球 →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="loading-ship">🚀</div>
+    <p>正在啟動 Python 引擎…</p>
+    <p class="loading-sub">第一次載入需要幾秒鐘</p>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
