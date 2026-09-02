@@ -11,7 +11,12 @@ export function isConfigured() {
   return Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
 }
 
-/** 初始化;onAuthChanged(user|null) 會在登入/登出時被呼叫。回傳目前的 user(或 null)。 */
+/**
+ * 初始化;回傳目前的 user(或 null)。
+ * onAuthChanged(user|null, event) 會在登入狀態變化時被呼叫。
+ * 注意 event 可能是 "INITIAL_SESSION"(訂閱當下就會觸發一次,並非真的有人登入/登出)
+ * 或 "TOKEN_REFRESHED"(背景自動續期),呼叫端若要做重整之類的動作必須排除這些事件。
+ */
 export async function initCloud(onAuthChanged) {
   if (!isConfigured()) return null;
   const { createClient } = await import(
@@ -19,10 +24,10 @@ export async function initCloud(onAuthChanged) {
   );
   client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  client.auth.onAuthStateChange((_event, session) => {
+  client.auth.onAuthStateChange((event, session) => {
     profile = null;
     cachedUser = session?.user ?? null;
-    if (onAuthChanged) onAuthChanged(cachedUser);
+    if (onAuthChanged) onAuthChanged(cachedUser, event);
   });
 
   const { data } = await client.auth.getSession();

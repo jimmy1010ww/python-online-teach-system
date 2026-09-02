@@ -19,7 +19,11 @@ async function boot() {
     return;
   }
 
-  await cloud.initCloud(() => window.location.reload());
+  // 只在使用者真的登出時才重整。INITIAL_SESSION 在訂閱當下必定觸發一次,
+  // 若對它重整會讓頁面陷入無窮重載,學生進度永遠來不及顯示。
+  await cloud.initCloud((_user, event) => {
+    if (event === "SIGNED_OUT") window.location.reload();
+  });
   const user = await cloud.refreshUser();
   if (!user) {
     el("gate-message").innerHTML =
